@@ -1,0 +1,83 @@
+{
+    "name": "datamweb/sms-rocket",
+    "description": "SMSRocket is a powerful package designed to enhance and simplify SMS communication in your CodeIgniter 4 project.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "codeigniter",
+        "sms",
+        "SMS",
+        "SMSRocket",
+        "CodeIgniter4"
+    ],
+    "authors": [
+        {
+            "name": "Pooya Parsa Dadashi",
+            "email": "Pooya_parsa_dadashi@yahoo.com",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://github.com/datamweb/sms-rocket",
+    "require": {
+        "php": ">=8.1 <8.5"
+    },
+    "require-dev": {
+        "codeigniter4/devkit": "^1.0",
+        "codeigniter/phpstan-codeigniter": "^1.4",
+        "codeigniter4/shield": "^1.1.0",
+        "codeigniter4/framework": "^4.2.7",
+        "mikey179/vfsstream": "^1.6.7",
+        "mockery/mockery": "^1.0",
+        "rector/rector": "1.2.6"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Datamweb\\SMSRocket\\": "src"
+        },
+        "exclude-from-classmap": [
+            "**/Database/Migrations/**"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests",
+            "Tests\\Support\\": "tests/_support"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    },
+    "scripts": {
+        "analyze": [
+            "phpstan analyze",
+            "psalm",
+            "rector process --dry-run"
+        ],
+        "sa": "@analyze",
+        "ci": [
+            "Composer\\Config::disableProcessTimeout",
+            "@cs",
+            "@deduplicate",
+            "@inspect",
+            "@analyze",
+            "@test"
+        ],
+        "cs": "php-cs-fixer fix --ansi --verbose --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix --config=php-cs-fixer.dist.php --verbose --ansi --using-cache=no --diff",
+        "deduplicate": "phpcpd src/",
+        "inspect": "deptrac analyze --cache-file=build/deptrac.cache",
+        "mutate": "infection --threads=2 --skip-initial-tests --coverage=build/phpunit",
+        "style": "@cs-fix",
+        "test": "phpunit"
+    },
+    "support": {
+        "forum": "https://github.com/datamweb/sms-rocket/discussions",
+        "source": "https://github.com/datamweb/sms-rocket",
+        "issues": "https://github.com/datamweb/sms-rocket/issues",
+        "docs": "https://www.smsrocket.codeigniter4.ir"
+    }
+}

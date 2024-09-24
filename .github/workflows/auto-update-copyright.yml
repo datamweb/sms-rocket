@@ -1,0 +1,91 @@
+name: Automate Update Copyright Year
+on:
+  schedule:
+    - cron: '0 0 1 1 *'  # Run the action at 00:00 on January 1st every year
+  workflow_dispatch:  # Allows for manual trigger
+
+jobs:
+  update-copyright-year:
+    permissions:
+      contents: write
+      pull-requests: write
+      
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+
+      - name: Get Current Year
+        id: get_year
+        run: php -r "echo 'CURRENT_YEAR=' . date('Y') . PHP_EOL;" >> $GITHUB_ENV
+        
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+          
+      - name: Create new branch and commit changes
+        id: create_branch
+        env:
+          CURRENT_YEAR: ${{ env.CURRENT_YEAR }}
+        run: |
+          BRANCH_NAME="update_copyright_${{ env.CURRENT_YEAR }}"
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+          
+          git switch -c $BRANCH_NAME develop
+          php .github/scripts/CopyrightYearUpdater.php
+          
+          git add .
+          git commit -m "docs: update copyright year to ${{ env.CURRENT_YEAR }}"
+          git push -f --no-sign origin $BRANCH_NAME
+      
+      - name: Authenticate GitHub CLI
+        run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Check and create labels if not exist
+        run: |
+          declare -A labels
+          labels=( 
+            ["copyright"]="5214CA|Copyright label" 
+            ["documentation"]="0075ca|Improvements or additions to documentation"
+          )
+
+          for label in "${!labels[@]}"; do
+            if gh label list | grep -q "^$label\b"; then
+              echo "Label '$label' already exists."
+            else
+              color="${labels[$label]%%|*}"
+              description="${labels[$label]#*|}"
+              gh label create "$label" --color "$color" --description "$description"
+              echo "Label '$label' created."
+            fi
+          done
+          
+      - name: Create Pull Request using GitHub CLI
+        env:
+          PAT2: ${{ secrets.PAT2 }}
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CURRENT_YEAR: ${{ env.CURRENT_YEAR }}
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+        run: |
+          gh auth login --with-token <<< "${{ secrets.PAT2 }}"
+          gh pr create \
+            --base develop \
+            --head "${{ env.BRANCH_NAME }}" \
+            --title "docs: update copyright year to ${{ env.CURRENT_YEAR }}" \
+            --body "This pull request updates the copyright year to ${{ env.CURRENT_YEAR }}." \
+            --label copyright \
+            --label documentation
+          gh auth logout
+
+

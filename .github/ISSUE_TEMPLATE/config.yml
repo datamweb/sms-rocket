@@ -1,0 +1,9 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/datamweb/sms-rocket/discussions
+    about: Please ask your support questions in the Discussions. Thanks!
+
+  - name: CodeIgniter Slack channel
+    url: https://join.slack.com/t/codeigniterchat/shared_invite/zt-244xrrslc-l_I69AJSi5y2a2RVN~xIdQ
+    about: Engage with other members of the community in our Slack channel.

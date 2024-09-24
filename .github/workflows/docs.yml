@@ -1,0 +1,86 @@
+name: Publish SMS ROCKET Documentation
+
+on:
+  push:
+    tags:
+      - '*' # For new tags
+    branches:
+      - develop # For changes in develop
+  pull_request:
+    branches:
+      - develop # For pull requests to develop
+  workflow_dispatch:  # Allows for manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  publish_docs_on_new_tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Install Dependencies
+        run: |
+          pip3 install mike 
+          pip3 install mkdocs-material
+          pip3 install mkdocs-git-revision-date-localized-plugin
+          pip3 install mkdocs-include-markdown-plugin
+
+      - name: Set Git Configuration
+        run: |
+          git config --global user.name "${{ secrets.GIT_USER }}"
+          git config --global user.email "${{ secrets.GIT_EMAIL }}"
+
+      - name: Publish Documentation Version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          VERSION=$(echo ${GITHUB_REF#refs/tags/})
+          echo "Deploying version: $VERSION"
+          
+          # Check if the version already exists
+          if mike list | grep -q "^$VERSION"; then
+            echo "Version $VERSION already exists. Skipping deployment."
+          else
+            mike deploy --push --update-aliases $VERSION latest
+            mike set-default --push latest
+          fi
+
+  publish_development_docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Install Dependencies
+        run: |
+          pip3 install mike 
+          pip3 install mkdocs-material
+          pip3 install mkdocs-git-revision-date-localized-plugin
+          pip3 install mkdocs-include-markdown-plugin
+
+      - name: Set Git Configuration
+        run: |
+          git config --global user.name "${{ secrets.GIT_USER }}"
+          git config --global user.email "${{ secrets.GIT_EMAIL }}"
+
+      - name: Publish Development Documentation
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          mike deploy develop --push --update-aliases --branch gh-pages --message "Update development docs"
+          mike alias develop develop || echo "Alias 'develop' already points to the latest development version."

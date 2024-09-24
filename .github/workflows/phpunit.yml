@@ -1,0 +1,177 @@
+name: PHPUnit
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - '**.php'
+      - 'composer.*'
+      - 'phpunit*'
+      - '.github/workflows/phpunit.yml'
+  push:
+    branches:
+      - develop
+    paths:
+      - '**.php'
+      - 'composer.*'
+      - 'phpunit*'
+      - '.github/workflows/phpunit.yml'
+  workflow_dispatch:  # Allows for manual trigger
+
+env:
+  NLS_LANG: 'AMERICAN_AMERICA.UTF8'
+  NLS_DATE_FORMAT: 'YYYY-MM-DD HH24:MI:SS'
+  NLS_TIMESTAMP_FORMAT: 'YYYY-MM-DD HH24:MI:SS'
+  NLS_TIMESTAMP_TZ_FORMAT: 'YYYY-MM-DD HH24:MI:SS'
+
+jobs:
+  main:
+    name: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }} - ${{ matrix.dependencies }}
+    runs-on: ubuntu-latest
+    if: (! contains(github.event.head_commit.message, '[ci skip]'))
+    strategy:
+      matrix:
+        php-versions: ['8.1', '8.2', '8.3']
+        db-platforms: ['MySQLi', 'SQLite3']
+        mysql-versions: ['5.7']
+        dependencies: ['highest']
+        include:
+          # MySQL 8.0
+          - php-versions: '8.1'
+            db-platforms: MySQLi
+            mysql-versions: '8.0'
+            dependencies: 'highest'
+          # Lowest Dependency
+          - php-versions: '8.1'
+            db-platforms: MySQLi
+            mysql-versions: '5.7'
+            dependencies: 'lowest'
+          # Postgre
+          - php-versions: '8.1'
+            db-platforms: Postgre
+            mysql-versions: '5.7'
+            dependencies: 'highest'
+          # SQLSRV
+          - php-versions: '8.1'
+            db-platforms: SQLSRV
+            mysql-versions: '5.7'
+            dependencies: 'highest'
+          # OCI8
+          - php-versions: '8.1'
+            db-platforms: OCI8
+            mysql-versions: '8.0'
+            dependencies: 'highest'
+
+    services:
+      mysql:
+        image: mysql:${{ matrix.mysql-versions }}
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: --health-cmd=pg_isready --health-interval=10s --health-timeout=5s --health-retries=3
+
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2019-CU28-ubuntu-20.04
+        env:
+          SA_PASSWORD: 1Secure*Password1
+          ACCEPT_EULA: Y
+          MSSQL_PID: Developer
+          MSSQL_ENCRYPT: optional
+        ports:
+          - 1433:1433
+        options: --health-cmd="/opt/mssql-tools18/bin/sqlcmd -S 127.0.0.1 -U sa -P 1Secure*Password1 -Q 'SELECT @@VERSION' -N -C" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      oracle:
+        image: gvenzl/oracle-xe:18
+        env:
+          ORACLE_RANDOM_PASSWORD: true
+          APP_USER: ORACLE
+          APP_USER_PASSWORD: ORACLE
+        ports:
+          - 1521:1521
+        options: >-
+          --health-cmd healthcheck.sh
+          --health-interval 20s
+          --health-timeout 10s
+          --health-retries 10
+
+    steps:
+      - name: Create database for MSSQL Server
+        if: matrix.db-platforms == 'SQLSRV'
+        run: sqlcmd -S 127.0.0.1 -U sa -P 1Secure*Password1 -Q "CREATE DATABASE test"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer, phive, phpunit
+          extensions: intl, json, mbstring, gd, xdebug, xml, sqlite3, sqlsrv, oci8, pgsql
+          coverage: xdebug
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get composer cache directory
+        run: echo "COMPOSER_CACHE_FILES_DIR=$(composer config cache-files-dir)" >> $GITHUB_ENV
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.COMPOSER_CACHE_FILES_DIR }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: |
+          if [ -f composer.lock ]; then
+            composer install ${{ env.COMPOSER_UPDATE_FLAGS }} --no-progress --no-interaction --prefer-dist --optimize-autoloader
+          else
+            composer update ${{ env.COMPOSER_UPDATE_FLAGS }} --no-progress --no-interaction --prefer-dist --optimize-autoloader
+          fi
+        env:
+          COMPOSER_UPDATE_FLAGS: ${{ matrix.dependencies == 'lowest' && '--prefer-lowest' || '' }}
+
+      - name: Test with PHPUnit
+        run: vendor/bin/phpunit --debug --coverage-text --testsuite main
+        env:
+          DB: ${{ matrix.db-platforms }}
+          TERM: xterm-256color
+          TACHYCARDIA_MONITOR_GA: enabled
+
+      - if: matrix.php-versions == '8.0'
+        name: Run Coveralls
+        continue-on-error: true
+        run: |
+          sudo phive --no-progress install --global --trust-gpg-keys E82B2FB314E9906E php-coveralls
+          php-coveralls --verbose --coverage_clover=build/phpunit/clover.xml --json_path build/phpunit/coveralls-upload.json
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_PARALLEL: true
+          COVERALLS_FLAG_NAME: PHP ${{ matrix.php-versions }} - ${{ matrix.db-platforms }}
+
+  coveralls:
+    needs: [main]
+    name: Coveralls Finished
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload Coveralls results
+        uses: coverallsapp/github-action@master
+        continue-on-error: true
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
