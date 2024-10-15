@@ -7,6 +7,7 @@
 [![Rector](https://github.com/datamweb/sms-rocket/actions/workflows/rector.yml/badge.svg)](https://github.com/datamweb/sms-rocket/actions/workflows/rector.yml)
 [![PHPCPD](https://github.com/datamweb/sms-rocket/actions/workflows/phpcpd.yml/badge.svg)](https://github.com/datamweb/sms-rocket/actions/workflows/phpcpd.yml)
 [![Deptrac](https://github.com/datamweb/sms-rocket/actions/workflows/deptrac.yml/badge.svg)](https://github.com/datamweb/sms-rocket/actions/workflows/deptrac.yml)
+[![Coverage Status](https://coveralls.io/repos/github/datamweb/sms-rocket/badge.svg?branch=develop)](https://coveralls.io/github/datamweb/sms-rocket?branch=develop)
 
 ---
 
