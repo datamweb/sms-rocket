@@ -40,7 +40,7 @@ One of the key features of this package is the ability to configure **custom dri
 
 For a comprehensive overview of the package, including setup, configuration, usage examples, and advanced features, please refer to the official documentation. All essential details are covered to help you get started smoothly.
 
-Explore the documentation [here](https://smsrocket.codeigniter4.ir/).
+Explore the documentation [here](https://www.smsrocket.codeigniter4.ir/).
 
 ## Installation
 
