@@ -1,6 +1,6 @@
 ### IDApardaz Driver
 
-The **Idehpardazan** driver allows you to send SMS through the [amootsms](https://sms.ir) service. This driver provides functionality for sending simple SMS, tracking delivery status, getting credit balance, and sending Patterned SMS.
+The **Idehpardazan** driver allows you to send SMS through the [sms.ir](https://sms.ir) service. This driver provides functionality for sending simple SMS, tracking delivery status, getting credit balance, and sending Patterned SMS.
 
 ### Configuration
 
