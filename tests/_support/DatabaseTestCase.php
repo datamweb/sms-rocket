@@ -23,7 +23,7 @@ abstract class DatabaseTestCase extends TestCase
 {
     use DatabaseTestTrait;
 
-    protected $namespace = '\Datamweb\SMSRocket';
+    // protected string $namespace = '\Datamweb\SMSRocket';
 
     /**
      * SMSRocket Table name

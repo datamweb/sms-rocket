@@ -28,20 +28,19 @@ use Tests\Support\TestCase;
 final class AmootsmsDriverTest extends TestCase
 {
     private AmootsmsDriver $driver;
-    private MockObject $mockModel;
     private MockObject $mockClient;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->mockModel  = $this->createMock(SMSLogModel::class);
+        $mockModel  = $this->createMock(SMSLogModel::class);
         $this->mockClient = $this->createMock(CURLRequest::class);
 
         $config = [
             'token' => 'test-token',
         ];
 
-        $this->driver = new AmootsmsDriver($config, $this->mockModel, $this->mockClient);
+        $this->driver = new AmootsmsDriver($config, $mockModel, $this->mockClient);
     }
 
     public function testSendSuccess(): void

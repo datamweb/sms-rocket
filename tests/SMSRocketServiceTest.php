@@ -36,22 +36,18 @@ final class SMSRocketServiceTest extends TestCase
 {
     private SMSRocketService $service;
     private SMSDriverInterface $driver;
-    private CacheInterface $cache;
     private MockObject $logger;
-    private CURLRequest $client;
-    private SMSRocketConfig $config;
-    private SMSLogModel $model;
 
     protected function setUp(): void
     {
-        $this->cache  = $this->createMock(CacheInterface::class);
-        $this->config = new SMSRocketConfig();
-        $this->model  = $this->createMock(SMSLogModel::class);
+        $cache  = $this->createMock(CacheInterface::class);
+        $config = new SMSRocketConfig();
+        $model  = $this->createMock(SMSLogModel::class);
         $this->logger = $this->createMock(Logger::class);
-        $this->client = $this->createMock(CURLRequest::class);
+        $client = $this->createMock(CURLRequest::class);
 
-        $this->config->defaultDriver = 'testDriver';
-        $this->config->drivers       = [
+        $config->defaultDriver = 'testDriver';
+        $config->drivers       = [
             'testDriver' => [
                 'class'  => $this->createMock(SMSDriverInterface::class)::class,
                 'config' => [
@@ -59,10 +55,10 @@ final class SMSRocketServiceTest extends TestCase
                 ],
             ],
         ];
-        $this->config->retryAttempts = 3;
-        $this->config->retryDelay    = 1;
+        $config->retryAttempts = 3;
+        $config->retryDelay    = 1;
 
-        $this->service = new SMSRocketService($this->cache, $this->config, $this->model, $this->logger, $this->client);
+        $this->service = new SMSRocketService($cache, $config, $model, $this->logger, $client);
     }
 
     /**

@@ -28,7 +28,6 @@ final class IdehpardazanDriverTest extends CIUnitTestCase
 {
     private IdehpardazanDriver $driver;
     private MockObject $client;
-    private MockObject $model;
 
     protected function setUp(): void
     {
@@ -36,10 +35,10 @@ final class IdehpardazanDriverTest extends CIUnitTestCase
 
         // Mocking the CURLRequest and SMSLogModel
         $this->client = $this->createMock(CURLRequest::class);
-        $this->model  = $this->createMock(SMSLogModel::class);
+        $model  = $this->createMock(SMSLogModel::class);
 
         // Initialize IdehpardazanDriver with mocked dependencies
-        $this->driver = new IdehpardazanDriver(['api_key' => 'test-api-key'], $this->model, $this->client);
+        $this->driver = new IdehpardazanDriver(['api_key' => 'test-api-key'], $model, $this->client);
     }
 
     public function testSend(): void
