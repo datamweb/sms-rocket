@@ -53,7 +53,7 @@ jobs:
             mysql-versions: '5.7'
             dependencies: 'highest'
           # SQLSRV
-          - php-versions: '8.1'
+          - php-versions: '8.4'
             db-platforms: SQLSRV
             mysql-versions: '8.0'
             dependencies: 'highest'
