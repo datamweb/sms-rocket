@@ -32,7 +32,7 @@ final class FarazsmsDriverTest extends TestCase
     protected function setUp(): void
     {
         $this->client = $this->createMock(CURLRequest::class);
-        $model  = $this->createMock(SMSLogModel::class);
+        $model        = $this->createMock(SMSLogModel::class);
         $config       = ['api_key' => 'test_api_key'];
 
         $this->driver = new FarazsmsDriver($config, $model, $this->client);

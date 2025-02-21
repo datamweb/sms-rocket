@@ -74,7 +74,7 @@ final class TwilioDriverTest extends CIUnitTestCase
                 DeliveryStatus::fromCode('sent')->toNumericCode(),
                 'Test message',
                 null,
-                'TestSender'
+                'TestSender',
             );
 
         $messageId = $this->driver->send('+1234567890', 'Test message', 'TestSender');

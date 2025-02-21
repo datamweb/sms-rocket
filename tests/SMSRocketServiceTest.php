@@ -40,11 +40,11 @@ final class SMSRocketServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $cache  = $this->createMock(CacheInterface::class);
-        $config = new SMSRocketConfig();
-        $model  = $this->createMock(SMSLogModel::class);
+        $cache        = $this->createMock(CacheInterface::class);
+        $config       = new SMSRocketConfig();
+        $model        = $this->createMock(SMSLogModel::class);
         $this->logger = $this->createMock(Logger::class);
-        $client = $this->createMock(CURLRequest::class);
+        $client       = $this->createMock(CURLRequest::class);
 
         $config->defaultDriver = 'testDriver';
         $config->drivers       = [

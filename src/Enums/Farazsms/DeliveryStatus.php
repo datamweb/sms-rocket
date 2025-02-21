@@ -18,6 +18,13 @@ namespace Datamweb\SMSRocket\Enums\Farazsms;
  */
 enum DeliveryStatus: int
 {
+    case Delivered = 2;
+    case Discarded = 4;
+    case Pending   = 1;
+    case Failed    = 3;
+    case Send      = 0;
+    case Unknown   = 99; // Default status for unknown codes
+
     /**
      * Get the delivery status title directly from the code.
      */
@@ -54,11 +61,4 @@ enum DeliveryStatus: int
             default => self::Unknown, // Return Unknown as default if code is invalid
         };
     }
-
-    case Delivered = 2;
-    case Discarded = 4;
-    case Pending   = 1;
-    case Failed    = 3;
-    case Send      = 0;
-    case Unknown   = 99; // Default status for unknown codes
 }

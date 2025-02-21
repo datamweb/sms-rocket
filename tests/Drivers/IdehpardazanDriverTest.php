@@ -35,7 +35,7 @@ final class IdehpardazanDriverTest extends CIUnitTestCase
 
         // Mocking the CURLRequest and SMSLogModel
         $this->client = $this->createMock(CURLRequest::class);
-        $model  = $this->createMock(SMSLogModel::class);
+        $model        = $this->createMock(SMSLogModel::class);
 
         // Initialize IdehpardazanDriver with mocked dependencies
         $this->driver = new IdehpardazanDriver(['api_key' => 'test-api-key'], $model, $this->client);

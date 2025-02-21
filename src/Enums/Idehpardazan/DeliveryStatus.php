@@ -18,6 +18,15 @@ namespace Datamweb\SMSRocket\Enums\Idehpardazan;
  */
 enum DeliveryStatus: int
 {
+    case Recieved           = 1;
+    case NotRecievedPhone   = 2;
+    case RecievedToTci      = 3;
+    case NotRecievedToTci   = 4;
+    case RecievedToOperator = 5;
+    case Failed             = 6;
+    case BlackList          = 7;
+    case Unknown            = 8;
+
     /**
      * Get the delivery status title directly from the code.
      */
@@ -57,13 +66,4 @@ enum DeliveryStatus: int
             default => self::Unknown, // Return Unknown as default if code is invalid
         };
     }
-
-    case Recieved           = 1;
-    case NotRecievedPhone   = 2;
-    case RecievedToTci      = 3;
-    case NotRecievedToTci   = 4;
-    case RecievedToOperator = 5;
-    case Failed             = 6;
-    case BlackList          = 7;
-    case Unknown            = 8;
 }

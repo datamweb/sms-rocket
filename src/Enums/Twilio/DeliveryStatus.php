@@ -18,6 +18,21 @@ namespace Datamweb\SMSRocket\Enums\Twilio;
  */
 enum DeliveryStatus: string
 {
+    case Queued             = 'queued';
+    case Sending            = 'sending';
+    case Sent               = 'sent';
+    case Failed             = 'failed';
+    case Delivered          = 'delivered';
+    case Undelivered        = 'undelivered';
+    case Receiving          = 'receiving';
+    case Received           = 'received';
+    case Accepted           = 'accepted';
+    case Scheduled          = 'scheduled';
+    case Read               = 'read';
+    case PartiallyDelivered = 'partially_delivered';
+    case Canceled           = 'canceled';
+    case Unknown            = 'unknown';
+
     /**
      * Map status string to a numeric code for storage in database.
      */
@@ -113,18 +128,4 @@ enum DeliveryStatus: string
             default               => self::Unknown, // Return Unknown as default if code is invalid
         };
     }
-    case Queued             = 'queued';
-    case Sending            = 'sending';
-    case Sent               = 'sent';
-    case Failed             = 'failed';
-    case Delivered          = 'delivered';
-    case Undelivered        = 'undelivered';
-    case Receiving          = 'receiving';
-    case Received           = 'received';
-    case Accepted           = 'accepted';
-    case Scheduled          = 'scheduled';
-    case Read               = 'read';
-    case PartiallyDelivered = 'partially_delivered';
-    case Canceled           = 'canceled';
-    case Unknown            = 'unknown';
 }

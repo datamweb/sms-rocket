@@ -33,7 +33,7 @@ final class AmootsmsDriverTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $mockModel  = $this->createMock(SMSLogModel::class);
+        $mockModel        = $this->createMock(SMSLogModel::class);
         $this->mockClient = $this->createMock(CURLRequest::class);
 
         $config = [
