@@ -323,7 +323,7 @@ $smsService = service('smsRocket');
 $response = $smsService->driver('custom')->setSender('YourSenderID')->setMessage('Hello, Custom World!')->send('1234567890');
 
 if ($response->isOK()) {
-    echo "SMS sent successfully with Message ID: " . $response->getMessage();
+    echo "SMS sent successfully with Message ID: ". $response->getMessageId();
 } else {
     echo "Failed to send SMS: " . $response->getMessage();
 }
