@@ -11,7 +11,7 @@ To use the **farazsms** driver, you need to configure your settings properly. Yo
     The `.env` file is the primary way to configure **sensitive information** such as API keys and other settings. This file should be located in the root of your CodeIgniter4 project.
 
     ```env
-    FARAZSMS_DRIVER_API_KEY = Your API key from https://panel.farazsms.com/client/APIToken
+    FARAZSMS_SMS_API_KEY = Your API key from https://panel.farazsms.com/client/APIToken
     ```
 
 === "Config\SMSRocketConfig.php"
@@ -107,4 +107,5 @@ To get the credit balance, call the `getCredit()` method on the initialized driv
 ```php
 $balance = $smsService->driver('farazsms')->getCredit();
 echo "Remaining credit: {$balance}";
+
 ```
