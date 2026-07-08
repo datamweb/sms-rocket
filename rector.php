@@ -92,7 +92,7 @@ return static function (RectorConfig $rectorConfig): void {
 
         TypedPropertyFromAssignsRector::class => [
             __DIR__ . '/src/Models/SMSLogModel.php',
-
+            __DIR__ . '/tests/_support/DatabaseTestCase.php',
             __DIR__ . '/tests/_support/Config/Registrar.php',
         ],
     ]);

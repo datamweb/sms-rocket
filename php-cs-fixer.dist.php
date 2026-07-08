@@ -45,5 +45,5 @@ $options = [
 return Factory::create(new CodeIgniter4(), $overrides, $options)->forLibrary(
     'CodeIgniter SMSRocket',
     'Pooya Parsa Dadashi',
-    'admin@codeigniter4.ir'
+    'admin@codeigniter4.ir',
 );

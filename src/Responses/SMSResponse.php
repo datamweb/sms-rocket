@@ -40,7 +40,7 @@ class SMSResponse implements Stringable
         /**
          * @var string|null The message ID of the SMS operation, or null if not available.
          */
-        protected ?string $messageId = null
+        protected ?string $messageId = null,
     ) {
     }
 

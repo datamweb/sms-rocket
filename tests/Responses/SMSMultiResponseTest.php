@@ -46,7 +46,7 @@ final class SMSMultiResponseTest extends TestCase
     {
         $multiResponse = new SMSMultiResponse();
 
-        $this->assertNull($multiResponse->getResponse('non_existent_recipient'));
+        $this->assertNotInstanceOf(SMSResponse::class, $multiResponse->getResponse('non_existent_recipient'));
     }
 
     /**

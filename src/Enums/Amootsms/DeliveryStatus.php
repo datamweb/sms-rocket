@@ -18,6 +18,26 @@ namespace Datamweb\SMSRocket\Enums\Amootsms;
  */
 enum DeliveryStatus: int
 {
+    case SendToTci          = 0;
+    case RecievedPhone      = 1;
+    case NotRecievedPhone   = 2;
+    case TciError           = 3;
+    case UnknownError       = 5;
+    case TciReceived        = 8;
+    case NotTciReceived     = 16;
+    case BlackList          = 35;
+    case Unknown            = 100;
+    case Sent               = 200;
+    case Filtered           = 300;
+    case SendingList        = 400;
+    case NoReceipt          = 500;
+    case SendWithAvanak     = 501;
+    case SendWithBackupVtel = 502;
+    case SendingQueue       = 900;
+    case WrongNumber        = 950;
+    case EmptyMessage       = 951;
+    case ShortCodeInvalid   = 952;
+
     /**
      * Get the delivery status title directly from the code.
      */
@@ -68,23 +88,4 @@ enum DeliveryStatus: int
             default => self::Unknown, // Return Unknown as default if code is invalid
         };
     }
-    case SendToTci          = 0;
-    case RecievedPhone      = 1;
-    case NotRecievedPhone   = 2;
-    case TciError           = 3;
-    case UnknownError       = 5;
-    case TciReceived        = 8;
-    case NotTciReceived     = 16;
-    case BlackList          = 35;
-    case Unknown            = 100;
-    case Sent               = 200;
-    case Filtered           = 300;
-    case SendingList        = 400;
-    case NoReceipt          = 500;
-    case SendWithAvanak     = 501;
-    case SendWithBackupVtel = 502;
-    case SendingQueue       = 900;
-    case WrongNumber        = 950;
-    case EmptyMessage       = 951;
-    case ShortCodeInvalid   = 952;
 }

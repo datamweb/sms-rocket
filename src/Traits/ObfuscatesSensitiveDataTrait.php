@@ -38,7 +38,7 @@ trait ObfuscatesSensitiveDataTrait
 
         // Iterate through each pattern and replace sensitive data with a masked version
         foreach ($patterns as $pattern => $replacement) {
-            $message = preg_replace($pattern, $replacement, (string) $message);
+            $message = preg_replace($pattern, (string) $replacement, (string) $message);
         }
 
         return $message;
